@@ -1048,6 +1048,28 @@ video{
 
   .wishes p{
     font-size: 13px;
+  }
+
+  /* general adjustments for narrow screens */
+  .hero-content h2 { font-size: 32px; }
+  .track-title { font-size: 32px; }
+  .card { padding: 20px; }
+  .timeline .card { max-width: 90%; }
+  .couple-wrapper { flex-direction: column; gap: 20px; }
+  .couple-photo img, .person-card img { width: 100%; height: auto; }
+  .story-card { flex-direction: column; align-items: center; }
+  .story-text h4 { font-size: 20px; }
+  .rsvp form input, .rsvp form textarea { width: 100%; }
+  .map iframe { height: 200px; }
+  .time { height: auto; padding: 60px 20px; }
+  .time-box h2 { font-size: 32px; }
+  .countdown { flex-wrap: wrap; gap: 15px; }
+  .unit span { font-size: 24px; }
+  .pw-title { font-size: 28px; }
+  .pw-slider-viewport { width: 100%; }
+  .live-stream h2 { font-size: 34px; }
+  .video-container { padding-bottom: 56.25%; }
+}
     line-height: 1.5;
   }
 }

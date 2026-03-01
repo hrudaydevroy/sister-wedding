@@ -1,0 +1,20 @@
+# general
+target/
+*.log
+*.tmp
+
+# IntelliJ/Eclipse
+.idea/
+*.iml
+*.classpath
+*.project
+
+# Maven
+pom.xml.rej
+
+# Node/Static files
+node_modules/
+
+# OS
+Thumbs.db
+.DS_Store

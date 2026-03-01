@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .dashboard-container {
+        max-width: 600px;
+        margin: 80px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
+      .dashboard-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .tab-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .tab-buttons button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        background: #eee;
+        border-radius: 6px;
+      }
+      .tab-buttons button.active {
+        background: #ff2f6d;
+        color: #fff;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .upload-form input[type=file] {
+        display: block;
+        margin-bottom: 10px;
+      }
+      .upload-form input[type=text] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+      .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        color: #ff2f6d;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h2>Media Manager</h2>
+      <div class="tab-buttons">
+        <button id="imagesTab" class="active">Images</button>
+        <button id="videosTab">Videos</button>
+      </div>
+      <div id="imagesContent" class="tab-content active">
+        <form class="upload-form" id="imageUploadForm">
+          <input type="file" accept="image/*" required />
+          <input type="text" placeholder="Title" required />
+          <button type="submit">Upload Image</button>
+        </form>
+        <div id="galleryTable"></div>
+      </div>
+      <div id="videosContent" class="tab-content">
+        <form class="upload-form" id="videoUploadForm">
+          <input type="file" accept="video/*" required />
+          <input type="text" placeholder="Title" required />
+          <button type="submit">Upload Video</button>
+        </form>
+        <div id="galleryTable"></div>
+      </div>
+      <a href="admin.html" class="back-btn">← Back to login</a>
+    </div>
+    <script>
+      const imagesTab = document.getElementById('imagesTab');
+      const videosTab = document.getElementById('videosTab');
+      const imagesContent = document.getElementById('imagesContent');
+      const videosContent = document.getElementById('videosContent');
+
+      imagesTab.addEventListener('click', () => {
+        imagesTab.classList.add('active');
+        videosTab.classList.remove('active');
+        imagesContent.classList.add('active');
+        videosContent.classList.remove('active');
+      });
+
+      videosTab.addEventListener('click', () => {
+        videosTab.classList.add('active');
+        imagesTab.classList.remove('active');
+        videosContent.classList.add('active');
+        imagesContent.classList.remove('active');
+      });
+
+      // placeholder upload handlers
+      async function submitMedia(form) {
+        const data = new FormData(form);
+        const resp = await fetch('/api/gallery/upload', {
+          method: 'POST',
+          body: data
+        });
+        if (resp.ok) {
+          alert('Uploaded successfully');
+          loadGallery();
+        } else {
+          alert('Upload failed');
+        }
+      }
+
+      document.getElementById('imageUploadForm').addEventListener('submit', e => {
+        e.preventDefault();
+        submitMedia(e.target);
+      });
+      document.getElementById('videoUploadForm').addEventListener('submit', e => {
+        e.preventDefault();
+        submitMedia(e.target);
+      });
+
+      async function loadGallery() {
+        const resp = await fetch('/api/gallery');
+        const items = await resp.json();
+        const table = document.getElementById('galleryTable');
+        if (!table) return;
+        let html = '<table><tr><th>Title</th><th>Type</th><th>Preview</th><th>Action</th></tr>';
+        items.forEach(i => {
+          html += `<tr><td>${i.title}</td><td>${i.type}</td>`;
+          if (i.type === 'image') {
+            html += `<td><img src="${i.mediaUrl}" width="100"></td>`;
+          } else {
+            html += `<td><video src="${i.mediaUrl}" width="150" controls></video></td>`;
+          }
+          html += `<td><button onclick="deleteItem('${i.id}')">Delete</button></td></tr>`;
+        });
+        html += '</table>';
+        table.innerHTML = html;
+      }
+
+      async function deleteItem(id) {
+        await fetch('/api/gallery/' + id, { method: 'DELETE' });
+        loadGallery();
+      }
+
+      // load on start
+      loadGallery();
+    </script>
+  </body>
+</html>

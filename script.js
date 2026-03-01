@@ -154,9 +154,63 @@ window.addEventListener("scroll", () => {
    RSVP
 ================================ */
 
-document.getElementById("rsvpForm").addEventListener("submit", e => {
-  e.preventDefault();
-  alert("💖 Thank you for confirming. See you at the wedding!");
+const rsvpForm = document.getElementById("rsvpForm");
+if (rsvpForm) {
+  rsvpForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const formData = new FormData(rsvpForm);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      guests: parseInt(formData.get('number')) || 0,
+      message: formData.get('textarea')
+    };
+    const resp = await fetch('/api/rsvp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (resp.ok) {
+      alert('💖 Thank you for confirming. See you at the wedding!');
+      rsvpForm.reset();
+    } else {
+      alert('Something went wrong submitting RSVP.');
+    }
+  });
+}
+
+/* ================================
+   DYNAMIC GALLERY FETCH
+================================ */
+
+async function loadGalleryItems() {
+  try {
+    const res = await fetch('/api/gallery');
+    if (!res.ok) return;
+    const items = await res.json();
+    const track = document.querySelector('.pw-slider-track');
+    if (!track) return;
+    track.innerHTML = '';
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'pw-card';
+      const img = document.createElement('img');
+      img.src = item.mediaUrl;
+      img.onclick = () => openLightbox(img);
+      card.appendChild(img);
+      track.appendChild(card);
+    });
+    // recalc cards
+    pwCards = document.querySelectorAll('.pw-card');
+    pwIndex = Math.floor(pwCards.length / 2);
+    pwUpdate();
+  } catch (err) {
+    console.error('Could not load gallery', err);
+  }
+}
+
+window.addEventListener('load', () => {
+  loadGalleryItems();
 });
 
 /* ================================
