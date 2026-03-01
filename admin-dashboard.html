@@ -106,7 +106,7 @@
       // placeholder upload handlers
       async function submitMedia(form) {
         const data = new FormData(form);
-        const resp = await fetch('/api/gallery/upload', {
+        const resp = await fetch('http://localhost:8080/api/gallery/upload', {
           method: 'POST',
           body: data
         });
@@ -147,7 +147,7 @@
       }
 
       async function deleteItem(id) {
-        await fetch('/api/gallery/' + id, { method: 'DELETE' });
+        await fetch('http://localhost:8080/api/gallery/' + id, { method: 'DELETE' });
         loadGallery();
       }
 

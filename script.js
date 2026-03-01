@@ -244,14 +244,11 @@ Join us to celebrate ❤️
    PHOTO PREVIEW
 ================================ */
 
-/* fixed gallery button behavior */
+/* fixed gallery button behavior (opens admin page) */
 const galleryBtn = document.getElementById("galleryBtn");
 if (galleryBtn) {
   galleryBtn.addEventListener("click", () => {
-    const gallerySection = document.getElementById("gallery");
-    if (gallerySection) {
-      gallerySection.scrollIntoView({ behavior: "smooth" });
-    }
+    window.location.href = 'admin.html';
   });
 }
 

@@ -1,0 +1,12 @@
+{
+  "name": "wedding-frontend",
+  "version": "1.0.0",
+  "description": "Static wedding frontend",
+  "scripts": {
+    "dev": "live-server --port=5500 --open=./index.html"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

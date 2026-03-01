@@ -4,8 +4,15 @@ import com.wedding.model.GalleryItem;
 import com.wedding.repository.GalleryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +36,7 @@ public class GalleryController {
         return repo.save(item);
     }
 
-    @DeleteMapping("/{id}
-")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         repo.deleteById(id);
         return ResponseEntity.ok(Map.of("status", "deleted"));

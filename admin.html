@@ -45,8 +45,14 @@
     <script>
       document.getElementById('loginForm').addEventListener('submit', e => {
         e.preventDefault();
-        // placeholder: on successful login navigate to dashboard
-        window.location.href = 'admin-dashboard.html';
+        const user = e.target[0].value;
+        const pass = e.target[1].value;
+        // predefined credentials
+        if (user === 'admin' && pass === 'wedding123') {
+          window.location.href = 'admin-dashboard.html';
+        } else {
+          alert('Invalid credentials');
+        }
       });
     </script>
   </body>

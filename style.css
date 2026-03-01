@@ -185,16 +185,11 @@ body.wedding-day::after {
   inset: 0;
   background-size: cover;
   background-position: center;
-  animation: heroSlide 18s infinite;
+  background-image: url("./photos/DSC05016.JPG.jpeg");
   z-index: -1;
 }
 
-@keyframes heroSlide {
-  0%   { background-image: url("mama.jpg"); }
-  33%  { background-image: url("hero2.jpg"); }
-  66%  { background-image: url("hero3.jpg"); }
-  100% { background-image: url("mama.jpg"); }
-}
+/* removed rotating hero images to avoid missing files */
 /* RESPONSIVE */
 @media(max-width:768px){
   .navbar{
