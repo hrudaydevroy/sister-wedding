@@ -8,7 +8,9 @@ function navigate() {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
-      const destination = "8WW7+55H, Gudem, Andhra Pradesh 532484";
+      const destination = encodeURIComponent(
+        "8WW6+4MV, Srikakulam, Gudem, Andhra Pradesh 532484, India"
+      );
 
       window.open(
         `https://www.google.com/maps/dir/${lat},${lng}/${destination}`,
@@ -19,7 +21,6 @@ function navigate() {
     alert("Geolocation is not supported by this browser.");
   }
 }
-
 /* ================================
    DYNAMIC COUNTDOWN
 ================================ */
@@ -103,7 +104,7 @@ function closeLightbox() {
 ================================ */
 
 const pwTrack = document.querySelector(".pw-slider-track");
-const pwCards = document.querySelectorAll(".pw-card");
+let pwCards = document.querySelectorAll(".pw-card");
 
 let pwIndex = Math.floor(pwCards.length / 2);
 
@@ -151,6 +152,11 @@ window.addEventListener("scroll", () => {
 });
 
 /* ================================
+   BACKEND ORIGIN (used for API requests)
+================================ */
+const BACKEND_ORIGIN = 'http://localhost:8080';
+
+/* ================================
    RSVP
 ================================ */
 
@@ -163,18 +169,25 @@ if (rsvpForm) {
       name: formData.get('name'),
       email: formData.get('email'),
       guests: parseInt(formData.get('number')) || 0,
-      message: formData.get('textarea')
+      message: formData.get('message')
     };
-    const resp = await fetch('/api/rsvp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    if (resp.ok) {
-      alert('💖 Thank you for confirming. See you at the wedding!');
-      rsvpForm.reset();
-    } else {
-      alert('Something went wrong submitting RSVP.');
+    try {
+      const resp = await fetch(`${BACKEND_ORIGIN}/api/rsvp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (resp.ok) {
+        alert('💖 Thank you for confirming. See you at the wedding!');
+        rsvpForm.reset();
+        // open admin dashboard so host can review RSVPs
+        window.open('admin-dashboard.html', '_blank');
+      } else {
+        alert('Something went wrong submitting RSVP.');
+      }
+    } catch (err) {
+      console.error('RSVP error', err);
+      alert('Unable to submit RSVP. Is the backend running?');
     }
   });
 }
@@ -184,7 +197,8 @@ if (rsvpForm) {
 ================================ */
 
 // base address for backend API – ensures requests work even when page is opened via file://
-const BACKEND_ORIGIN = 'http://localhost:8080';
+// (already declared earlier, keep for backward compatibility)
+// const BACKEND_ORIGIN = 'http://localhost:8080';
 
 async function loadGalleryItems() {
   try {
@@ -214,6 +228,13 @@ async function loadGalleryItems() {
 }
 
 window.addEventListener('load', () => {
+  // hide gallery video tag if file not found
+  const vid = document.querySelector('#gallery video');
+  if (vid) {
+    vid.addEventListener('error', () => {
+      vid.style.display = 'none';
+    });
+  }
   loadGalleryItems();
 });
 

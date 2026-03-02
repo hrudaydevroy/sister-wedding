@@ -389,10 +389,109 @@ body.wedding-day::after {
   }
 }
 
+/* ================================
+   RSVP & QR SECTION STYLES
+================================ */
+.rsvp {
+  padding: 60px 20px;
+  background: #fafafa;
+  text-align: center;
+}
+.rsvp h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+.rsvp form {
+  max-width: 400px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rsvp input,
+.rsvp textarea,
+.rsvp button {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+.rsvp button {
+  background: #ff2f6d;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+.rsvp button:hover {
+  background: #e0245e;
+}
+
+.qr {
+  padding: 60px 20px;
+  text-align: center;
+}
+.qr img {
+  max-width: 250px;
+  width: 80%;
+  height: auto;
+  margin: 20px 0;
+  border: 4px solid #ff2f6d;
+  border-radius: 12px;
+}
+
 
 .story-content{
   max-width: 900px;
   margin: auto;
+}
+
+/* RSVP section improved */
+.rsvp {
+  padding: 60px 20px;
+  background: #fafafa;
+  text-align: center;
+}
+.rsvp h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+.rsvp form {
+  max-width: 400px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rsvp input,
+.rsvp textarea,
+.rsvp button {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+.rsvp button {
+  background: #ff2f6d;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+.rsvp button:hover {
+  background: #e0245e;
+}
+
+/* QR code section styles */
+.qr {
+  padding: 60px 20px;
+  text-align: center;
+}
+.qr img {
+  max-width: 250px;
+  width: 80%;
+  height: auto;
+  margin: 20px 0;
+  border: 4px solid #ff2f6d;
+  border-radius: 12px;
 }
 
 .story-of{
@@ -488,69 +587,124 @@ body.wedding-day::after {
   }
 }
 /* time */
+
 .time {
-  height: 350px;
+  width: 100%;
+  height: 550px; /* perfect frame height */
+
   background:
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-    url("https://i.pinimg.com/736x/37/cc/42/37cc425160143a830461262e3b4917ce.jpg") center/cover no-repeat;
+    url("https://i.pinimg.com/1200x/c3/c5/da/c3c5dab60a3caf39d129e1a20881e73d.jpg")
+    center center / contain no-repeat;
+
+  background-color: #3b0000; /* fallback matching red */
+
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #fff;
+  color: #ffffff;
+
+  padding: 40px 20px;
 }
 
+/* CENTER CONTENT */
 .time-box {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
+/* TITLE */
 .time-box h2 {
   font-size: 48px;
   font-family: "Brush Script MT", cursive;
   margin-bottom: 25px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
+/* COUNTDOWN */
 .countdown {
   display: flex;
-  gap: 40px;
+  gap: 50px;
+  justify-content: center;
+  align-items: center;
 }
 
+/* EACH UNIT */
 .unit {
   text-align: center;
 }
 
+/* NUMBERS */
 .unit span {
-  font-size: 40px;
+  font-size: 48px;
   font-weight: 300;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
 }
 
+/* LABELS */
 .unit small {
   display: block;
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 14px;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
-  .countdown {
-    gap: 20px;
+/* ===============================
+   RESPONSIVE FIX
+================================ */
+
+@media (max-width: 1024px) {
+  .time {
+    height: 480px;
   }
 
   .unit span {
-    font-size: 28px;
+    font-size: 40px;
   }
 }
 
+@media (max-width: 768px) {
+  .time {
+    height: 420px;
+    background-size: contain;
+  }
 
+  .time-box h2 {
+    font-size: 34px;
+  }
 
+  .countdown {
+    gap: 25px;
+    flex-wrap: wrap;
+  }
 
+  .unit span {
+    font-size: 30px;
+  }
 
+  .unit small {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time {
+    height: 380px;
+  }
+
+  .time-box h2 {
+    font-size: 26px;
+  }
+
+  .unit span {
+    font-size: 24px;
+  }
+}
 /* ===============================
    APPLE STYLE WEDDING TIMELINE
 ================================ */

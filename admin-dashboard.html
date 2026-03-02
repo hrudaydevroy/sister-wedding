@@ -84,6 +84,7 @@
       <div class="tab-buttons">
         <button id="imagesTab" class="active">Images</button>
         <button id="videosTab">Videos</button>
+        <button id="rsvpTab">RSVPs</button>
       </div>
       <div id="imagesContent" class="tab-content active">
         <form class="upload-form" id="imageUploadForm">
@@ -106,11 +107,22 @@
       <!-- quick access to public site -->
       <a href="index.html" class="back-btn" style="margin-left:20px;">View Site</a>
     </div>
+    <!-- rsvp list table (initially hidden) -->
+    <div id="rsvpContent" class="tab-content" style="display:none; max-height:400px; overflow:auto;">
+      <h3>RSVP Submissions</h3>
+      <table id="rsvpTable" style="width:100%;border-collapse:collapse;">
+        <thead><tr><th>Name</th><th>Email</th><th>Guests</th><th>Message</th><th>Time</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    </div>
     <script>
       const imagesTab = document.getElementById('imagesTab');
       const videosTab = document.getElementById('videosTab');
+      const rsvpTab = document.getElementById('rsvpTab');
       const imagesContent = document.getElementById('imagesContent');
       const videosContent = document.getElementById('videosContent');
+      const rsvpContent = document.getElementById('rsvpContent');
 
       imagesTab.addEventListener('click', () => {
         imagesTab.classList.add('active');
@@ -122,8 +134,19 @@
       videosTab.addEventListener('click', () => {
         videosTab.classList.add('active');
         imagesTab.classList.remove('active');
+        rsvpTab.classList.remove('active');
         videosContent.classList.add('active');
         imagesContent.classList.remove('active');
+        rsvpContent.classList.remove('active');
+      });
+      rsvpTab.addEventListener('click', () => {
+        rsvpTab.classList.add('active');
+        imagesTab.classList.remove('active');
+        videosTab.classList.remove('active');
+        rsvpContent.classList.add('active');
+        imagesContent.classList.remove('active');
+        videosContent.classList.remove('active');
+        loadRSVPs();
       });
 
       // placeholder upload handlers
@@ -183,6 +206,20 @@
         });
         html += '</table>';
         table.innerHTML = html;
+      }
+      
+      async function loadRSVPs() {
+        const resp = await fetch(BACKEND + '/api/rsvp');
+        if (!resp.ok) return;
+        const list = await resp.json();
+        const tbody = document.querySelector('#rsvpTable tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        list.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${r.name}</td><td>${r.email}</td><td>${r.guests}</td><td>${r.message||''}</td><td>${r.createdAt||''}</td>`;
+          tbody.appendChild(tr);
+        });
       }
 
       async function deleteItem(id) {

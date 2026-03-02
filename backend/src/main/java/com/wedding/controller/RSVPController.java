@@ -15,6 +15,9 @@ public class RSVPController {
     @Autowired
     private RSVPRepository repo;
 
+    @Autowired
+    private com.wedding.service.SMSService smsService;
+
     @GetMapping
     public List<RSVP> all() {
         return repo.findAll();
@@ -23,6 +26,11 @@ public class RSVPController {
     @PostMapping
     public RSVP create(@RequestBody RSVP rsvp) {
         rsvp.setCreatedAt(LocalDateTime.now());
-        return repo.save(rsvp);
+        RSVP saved = repo.save(rsvp);
+        // inform host via SMS (number hardcoded as per requirements)
+        String adminNumber = "+917799461935"; // international format
+        String msg = "New RSVP from " + saved.getName() + " (" + saved.getEmail() + ") guests=" + saved.getGuests() + " msg='" + saved.getMessage() + "'";
+        smsService.sendSMS(adminNumber, msg);
+        return saved;
     }
 }
