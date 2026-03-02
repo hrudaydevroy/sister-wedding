@@ -29,16 +29,22 @@
     photosBtn.addEventListener('click',()=>{current='image';photosBtn.classList.add('active');videosBtn.classList.remove('active');load();});
     videosBtn.addEventListener('click',()=>{current='video';videosBtn.classList.add('active');photosBtn.classList.remove('active');load();});
     async function load(){
-      const res=await fetch('http://localhost:8080/api/gallery');
+      const BACKEND = 'http://localhost:8080';
+      const res=await fetch(BACKEND + '/api/gallery');
       const items=await res.json();
       container.innerHTML='';
       items.filter(i=>i.type===current).forEach(i=>{
         const div=document.createElement('div');div.className='card';
         const title=document.createElement('div');title.textContent=i.title;
         if(current==='image'){
-          const img=document.createElement('img');img.src=i.mediaUrl;div.appendChild(img);
+          const img=document.createElement('img');
+          img.src = 'http://localhost:8080' + i.mediaUrl;
+          div.appendChild(img);
         } else {
-          const vid=document.createElement('video');vid.src=i.mediaUrl;vid.controls=true;div.appendChild(vid);
+          const vid=document.createElement('video');
+          vid.src = 'http://localhost:8080' + i.mediaUrl;
+          vid.controls=true;
+          div.appendChild(vid);
         }
         div.appendChild(title);
         container.appendChild(div);

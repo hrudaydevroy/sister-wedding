@@ -67,21 +67,23 @@
       </div>
       <div id="imagesContent" class="tab-content active">
         <form class="upload-form" id="imageUploadForm">
-          <input type="file" accept="image/*" required />
-          <input type="text" placeholder="Title" required />
+          <input type="file" name="file" accept="image/*" required />
+          <input type="text" name="title" placeholder="Title" required />
           <button type="submit">Upload Image</button>
         </form>
         <div id="galleryTable"></div>
       </div>
       <div id="videosContent" class="tab-content">
         <form class="upload-form" id="videoUploadForm">
-          <input type="file" accept="video/*" required />
-          <input type="text" placeholder="Title" required />
+          <input type="file" name="file" accept="video/*" required />
+          <input type="text" name="title" placeholder="Title" required />
           <button type="submit">Upload Video</button>
         </form>
         <div id="galleryTable"></div>
       </div>
       <a href="admin.html" class="back-btn">← Back to login</a>
+      <!-- quick access to public site -->
+      <a href="index.html" class="back-btn" style="margin-left:20px;">View Site</a>
     </div>
     <script>
       const imagesTab = document.getElementById('imagesTab');
@@ -113,6 +115,9 @@
         if (resp.ok) {
           alert('Uploaded successfully');
           loadGallery();
+        } else if (resp.status === 409) {
+          const body = await resp.json();
+          alert('Duplicate: ' + (body.error || 'media exists'));
         } else {
           alert('Upload failed');
         }
@@ -128,7 +133,7 @@
       });
 
       async function loadGallery() {
-        const resp = await fetch('/api/gallery');
+        const resp = await fetch('http://localhost:8080/api/gallery');
         const items = await resp.json();
         const table = document.getElementById('galleryTable');
         if (!table) return;

@@ -183,9 +183,12 @@ if (rsvpForm) {
    DYNAMIC GALLERY FETCH
 ================================ */
 
+// base address for backend API – ensures requests work even when page is opened via file://
+const BACKEND_ORIGIN = 'http://localhost:8080';
+
 async function loadGalleryItems() {
   try {
-    const res = await fetch('/api/gallery');
+    const res = await fetch(`${BACKEND_ORIGIN}/api/gallery`);
     if (!res.ok) return;
     const items = await res.json();
     const track = document.querySelector('.pw-slider-track');
@@ -195,7 +198,8 @@ async function loadGalleryItems() {
       const card = document.createElement('div');
       card.className = 'pw-card';
       const img = document.createElement('img');
-      img.src = item.mediaUrl;
+      // mediaUrl starts with '/uploads/...' so prefix backend origin
+      img.src = BACKEND_ORIGIN + item.mediaUrl;
       img.onclick = () => openLightbox(img);
       card.appendChild(img);
       track.appendChild(card);
@@ -252,11 +256,13 @@ if (galleryBtn) {
   });
 }
 
-
-function previewPhoto(event){
-  const img = document.createElement("img");
-  img.src = URL.createObjectURL(event.target.files[0]);
-  document.getElementById("preview").innerHTML = "";
+// admin quick access
+const adminBtn = document.getElementById('adminBtn');
+if (adminBtn) {
+  adminBtn.addEventListener('click', () => {
+    window.location.href = 'admin.html';
+  });
+}
   document.getElementById("preview").appendChild(img);
 }
 
