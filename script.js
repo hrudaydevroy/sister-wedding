@@ -178,7 +178,8 @@ if (rsvpForm) {
         body: JSON.stringify(data)
       });
       if (resp.ok) {
-        alert('💖 Thank you for confirming. See you at the wedding!');
+        const result = await resp.json();
+        alert(`💖 Thank you ${result.name} for confirming${result.message ? ' ("' + result.message + '")' : ''}! See you at the wedding!`);
         rsvpForm.reset();
         // open admin dashboard so host can review RSVPs
         window.open('admin-dashboard.html', '_blank');

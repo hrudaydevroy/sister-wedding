@@ -188,7 +188,7 @@
         submitMedia(e.target);
       });
 
-      const BACKEND = 'http://localhost:8080';
+      // removed duplicate BACKEND declaration (already defined above)
       async function loadGallery() {
         const resp = await fetch(BACKEND + '/api/gallery');
         const items = await resp.json();
