@@ -14,7 +14,7 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/gallery/**", "/api/rsvp/**").permitAll()
+                .requestMatchers("/api/gallery/**", "/api/rsvp/**", "/uploads/**").permitAll()
                 .anyRequest().authenticated()
             )
             .httpBasic(); // placeholder, replace with JWT filter

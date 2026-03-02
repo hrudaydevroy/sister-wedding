@@ -165,8 +165,9 @@
         submitMedia(e.target);
       });
 
+      const BACKEND = 'http://localhost:8080';
       async function loadGallery() {
-        const resp = await fetch('http://localhost:8080/api/gallery');
+        const resp = await fetch(BACKEND + '/api/gallery');
         const items = await resp.json();
         const table = document.getElementById('galleryTable');
         if (!table) return;
@@ -174,9 +175,9 @@
         items.forEach(i => {
           html += `<tr><td>${i.title}</td><td>${i.type}</td>`;
           if (i.type === 'image') {
-            html += `<td><img src="${i.mediaUrl}" width="100"></td>`;
+            html += `<td><img src="${BACKEND + i.mediaUrl}" width="100"></td>`;
           } else {
-            html += `<td><video src="${i.mediaUrl}" width="150" controls></video></td>`;
+            html += `<td><video src="${BACKEND + i.mediaUrl}" width="150" controls></video></td>`;
           }
           html += `<td><button onclick="deleteItem('${i.id}')">Delete</button></td></tr>`;
         });
