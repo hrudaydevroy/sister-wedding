@@ -30,17 +30,43 @@ This workspace contains a static frontend for a wedding website with:
 
 ### Backend (Spring Boot)
 
-A minimal backend is included in the `backend/` subfolder. To start it:
+A minimal backend is included in the `backend/` subfolder. It uses MongoDB for persistence so you need a running Mongo instance before starting the Spring application.
 
-1. Make sure you have JDK 17+ installed and `mvn` on your `PATH`.
-2. From the `backend` directory run:
+1. **Install/launch MongoDB**
+   - On Windows you can install the [MongoDB Community Server](https://www.mongodb.com/try/download/community) and run the `mongod` service.
+   - Alternatively a quick Docker container works:
+     ```powershell
+     docker run -d --name mongo-local -p 27017:27017 mongo:6.0
+     ```
+   - Verify the database is reachable:
+     ```powershell
+     mongo --eval "db.getMongo().getDBNames()"
+     ```
+   - You can also use **MongoDB Compass** (as shown in the screenshot) to browse the `wedding.gallery` and `wedding.rsvp` collections.
+
+2. **Configure connection (optional)**
+   The default URI in `backend/src/main/resources/application.properties` is:
+   ```properties
+   spring.data.mongodb.uri=${MONGODB_URI:mongodb://localhost:27017/wedding}
+   ```
+   You can override it by setting the `MONGODB_URI` environment variable when launching the app.
+
+3. **Start the backend**
    ```powershell
    cd backend
    mvn spring-boot:run
    ```
-3. The server listens on port `8080` by default. You can customize ports and databases via `application.properties`.
+   (or `mvn clean package` then `java -jar target/*.jar`)
 
-The REST API endpoints under `/api/gallery` and `/api/rsvp` are used by the frontend.
+4. The server listens on port `8080` by default.  When it starts it will log a message like:
+   ```text
+   Connected to MongoDB at mongodb://localhost:27017/wedding
+   ```
+   indicating the database connection is healthy.
+
+The REST API endpoints under `/api/gallery` and `/api/rsvp` are used by the frontend.  You can also insert or query documents directly from the Mongo shell or Compass to confirm connectivity.
+
+> **Tip:** if you see a `org.springframework.data.mongodb.UncategorizedMongoDbException` or similar on startup, check that `mongod` is running and the URI is correct.
 
 #### CORS and troubleshooting
 
@@ -66,6 +92,11 @@ You can test the API from the command line to verify CORS headers:
 curl.exe -i -H "Origin: http://127.0.0.1:5501" http://localhost:8080/api/gallery
 ```
 
+You can also perform a simple insert to make sure the backend is able to write to MongoDB:
+
+```powershell
+curl.exe -X POST http://localhost:8080/api/gallery -H "Content-Type: application/json" -d '{"title":"test","mediaUrl":"/uploads/test.jpg","type":"image"}'
+```
 Once the backend is running, the gallery and admin dashboard should be able to communicate correctly.
 
 > **Important:** After editing backend code you must stop the running process and restart it so that changes (CORS settings, security rules, etc.) take effect. If you start a second instance while the first is still running, the new process will fail to bind to port `8080`.
