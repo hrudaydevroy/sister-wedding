@@ -1,5 +1,10 @@
 # Wedding Management & Live Streaming Platform
 
+![GitHub repository screenshot](docs/github-repo.png)
+
+![MongoDB Compass gallery view](docs/mongodb-compass.png)
+
+
 This workspace contains a static frontend for a wedding website with:
 
 - Static invitation, countdown, story, timeline, gallery, RSVP, and more.
