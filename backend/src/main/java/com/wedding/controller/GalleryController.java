@@ -1,10 +1,6 @@
 package com.wedding.controller;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.wedding.model.GalleryItem;
 import com.wedding.repository.GalleryRepository;
 
@@ -32,6 +30,9 @@ public class GalleryController {
 
     @Autowired
     private GalleryRepository repo;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     // ================= GET ALL MEDIA =================
 
@@ -62,12 +63,6 @@ public class GalleryController {
                         .body(Map.of("error", "No files selected"));
             }
 
-            Path uploadDir = Paths.get("uploads");
-
-            if (!Files.exists(uploadDir)) {
-                Files.createDirectories(uploadDir);
-            }
-
             for (MultipartFile file : files) {
 
                 if (file.isEmpty())
@@ -90,17 +85,26 @@ public class GalleryController {
                 if (original == null)
                     original = "file";
 
-                String filename = System.currentTimeMillis() + "_" + original;
+                Map uploadResult;
 
-                Path destination = uploadDir.resolve(filename);
+                if (contentType != null && contentType.startsWith("video")) {
+                    uploadResult = cloudinary.uploader().upload(
+                            file.getBytes(),
+                            ObjectUtils.asMap("resource_type", "video")
+                    );
+                } else {
+                    uploadResult = cloudinary.uploader().upload(
+                            file.getBytes(),
+                            ObjectUtils.emptyMap()
+                    );
+                }
 
-                Files.copy(file.getInputStream(), destination,
-                        StandardCopyOption.REPLACE_EXISTING);
+                String url = uploadResult.get("secure_url").toString();
 
                 GalleryItem item = new GalleryItem();
 
                 item.setTitle(original);
-                item.setMediaUrl("/uploads/" + filename);
+                item.setMediaUrl(url);
                 item.setType(mediaType);
                 item.setUploadedAt(LocalDateTime.now());
 

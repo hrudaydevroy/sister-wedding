@@ -1,4 +1,4 @@
-const BACKEND = "http://localhost:8080";
+const BACKEND = "https://digital-wedding-invitation-1.onrender.com";
 
 const imagesTab = document.getElementById("imagesTab");
 const videosTab = document.getElementById("videosTab");
